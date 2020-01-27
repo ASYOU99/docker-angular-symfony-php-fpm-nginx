@@ -1,0 +1,58 @@
+# tell docker what version of the docker-compose.yml were using
+version: '3.5'
+
+services:
+  nginx:
+    build: 
+      context: ./nginx
+    ports:
+      - 80:80
+      - 443:443
+    tty: true
+    container_name: nginx
+    volumes:
+      - ./symfony:/code
+      - ./nginx/conf.d:/etc/nginx/conf.d
+    working_dir: /code
+    networks:
+      - web-network
+    depends_on:
+      - php
+  php:
+    build: 
+      context: ./php-fpm
+    tty: true
+    container_name: php
+#    ports:
+#      - 4201:4200
+    volumes:
+      - ./symfony:/code
+    environment:
+      XDEBUG_CONFIG: "remote_host=192.168.220.1 remote_enable=1"
+      PHP_IDE_CONFIG: "serverName=Docker"
+    networks:
+      - web-network
+  node:
+    build: node
+    container_name: angular
+    ports:
+      - 4200:4200
+    volumes:
+      - ./angular:/frontend
+    tty: true
+    command:
+      - /bin/sh
+      - -c
+      - |
+        cd /frontend && npm start
+    expose:
+      - 4200
+    networks:
+      - web-network
+networks:
+  web-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.220.0/28
