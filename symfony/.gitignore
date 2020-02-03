@@ -1,20 +1,9 @@
-# Created by .ignore support plugin (hsz.mobi)
-### Symfony template
-
-# Cache, session files and logs (Symfony3)
 /var
-!var/cache/.gitkeep
-!var/logs/.gitkeep
-!var/sessions/.gitkeep
-
+/vendor
+/bin
 # Parameters
 /app/config/parameters.yml
 /app/config/parameters.ini
-
-/bin/*
-!bin/console
-!bin/symfony_requirements
-/vendor
 
 # Backup entities generated with doctrine:generate:entities command
 **/Entity/*~
