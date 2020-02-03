@@ -13,11 +13,11 @@ class TestController extends AbstractController
 
     public function index()
     {
-        #return phpinfo();
+        phpinfo();
 
-        return $this->json([
-            'message' => 'Welcome to your new controller!',
-            'path' => 'src/Controller/TestController.php',
-        ]);
+//        return $this->json([
+//            'message' => 'Welcome to your new controller!',
+//            'path' => 'src/Controller/TestController.php',
+//        ]);
     }
 }

@@ -2,6 +2,7 @@
 version: '3.5'
 
 services:
+  #Nginx Service
   nginx:
     build: 
       context: ./nginx
@@ -14,15 +15,18 @@ services:
       - ./symfony:/code
       - ./nginx/conf.d:/etc/nginx/conf.d
     working_dir: /code
+    restart: always
     networks:
       - web-network
     depends_on:
       - php
+  #PHP-FPM Service
   php:
     build: 
       context: ./php-fpm
     tty: true
     container_name: php
+    restart: always
 #    ports:
 #      - 4201:4200
     volumes:
@@ -32,6 +36,7 @@ services:
       PHP_IDE_CONFIG: "serverName=Docker"
     networks:
       - web-network
+  #Angular-node Service
   node:
     build: node
     container_name: angular
@@ -40,6 +45,7 @@ services:
     volumes:
       - ./angular:/frontend
     tty: true
+    restart: always
     command:
       - /bin/sh
       - -c
@@ -49,6 +55,26 @@ services:
       - 4200
     networks:
       - web-network
+#MySQL Service
+  db:
+    image: mysql:5.7.22
+    container_name: db
+    restart: always
+    tty: true
+    ports:
+      - "3306:3306"
+    environment:
+      MYSQL_DATABASE: symfony
+      MYSQL_ROOT_PASSWORD: 123
+      SERVICE_TAGS: dev
+      SERVICE_NAME: mysql
+    volumes:
+      - dbdata:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/my.cnf
+    networks:
+      - web-network
+
+#Docker Networks
 networks:
   web-network:
     driver: bridge
@@ -56,3 +82,7 @@ networks:
       driver: default
       config:
         - subnet: 192.168.220.0/28
+#Volumes
+volumes:
+  dbdata:
+    driver: local
