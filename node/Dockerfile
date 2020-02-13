@@ -12,7 +12,7 @@ ENV NPM_CONFIG_PREFIX=/home/node/.npm-global
 
 ENV HOME=/home/node
 
-WORKDIR $HOME/app
+WORKDIR /frontend
 
 RUN npm i -g npm
 

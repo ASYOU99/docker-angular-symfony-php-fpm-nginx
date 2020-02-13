@@ -6,34 +6,32 @@ services:
   nginx:
     build: 
       context: ./nginx
+    container_name: nginx
     ports:
       - 80:80
       - 443:443
-    tty: true
-    container_name: nginx
     volumes:
       - ./symfony:/code
       - ./nginx/conf.d:/etc/nginx/conf.d
-    working_dir: /code
+    tty: true
     restart: always
     networks:
       - web-network
     depends_on:
       - php
+      - db
   #PHP-FPM Service
   php:
     build: 
       context: ./php-fpm
-    tty: true
     container_name: php
-    restart: always
-#    ports:
-#      - 4201:4200
     volumes:
       - ./symfony:/code
     environment:
       XDEBUG_CONFIG: "remote_host=192.168.220.1"
       PHP_IDE_CONFIG: "serverName=Docker"
+    tty: true
+    restart: always
     networks:
       - web-network
   #Angular-node Service
@@ -55,22 +53,20 @@ services:
       - 4200
     networks:
       - web-network
-#MySQL Service
+#Postgres Service
   db:
-    image: mysql:5.7.22
-    container_name: db
+    container_name: postgres_db
+    image: postgres
+    ports:
+      - 5432:5432
+    volumes:
+      - ./postgres/:/docker-entrypoint-initdb.d/
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
     restart: always
     tty: true
-    ports:
-      - "3306:3306"
-    environment:
-      MYSQL_DATABASE: symfony
-      MYSQL_ROOT_PASSWORD: 123
-      SERVICE_TAGS: dev
-      SERVICE_NAME: mysql
-    volumes:
-      - dbdata:/var/lib/mysql
-      - ./mysql/my.cnf:/etc/mysql/my.cnf
     networks:
       - web-network
 
@@ -82,7 +78,29 @@ networks:
       driver: default
       config:
         - subnet: 192.168.220.0/28
+
 #Volumes
 volumes:
   dbdata:
     driver: local
+
+##MySQL Service
+#  db:
+#    image: mysql:5.7.22
+#    container_name: mysql_db
+#    ports:
+#      - "3306:3306"
+#    volumes:
+#      - dbdata:/var/lib/mysql
+#      - ./mysql/my.cnf:/etc/mysql/my.cnf
+#    environment:
+#      MYSQL_DATABASE: ${DB_NAME}
+#      MYSQL_ROOT_PASSWORD: ${DB_ROOT_PASSWORD}
+#      MYSQL_USER: ${DB_USER}
+#      MYSQL_PASSWORD: ${DB_PASSWORD}
+#      SERVICE_TAGS: dev
+#      SERVICE_NAME: mysql
+#    restart: always
+#    tty: true
+#    networks:
+#      - web-network
