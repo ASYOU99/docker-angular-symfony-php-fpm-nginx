@@ -1,20 +1,23 @@
 import {Component, OnInit} from '@angular/core';
-import {ApiService} from "./api.service";
+import {ApiService} from "./services/api.service";
 
 @Component({
   selector: 'app-root',
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.css']
 })
-export class AppComponent  implements OnInit {
+export class AppComponent implements OnInit {
+
+  title:string = 'Test';
 
   products = [];
 
-  constructor(private apiService: ApiService) { }
+  constructor(private apiService: ApiService) {
+  }
 
   ngOnInit() {
 
-    this.apiService.get().subscribe((data: any[])=>{
+    this.apiService.get().subscribe((data: any[]) => {
 
       console.log(data);
 
