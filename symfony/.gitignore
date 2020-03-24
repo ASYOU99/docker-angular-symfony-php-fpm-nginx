@@ -1,19 +1,7 @@
-/var
-/vendor
-/bin
-# Parameters
-/app/config/parameters.yml
-/app/config/parameters.ini
-
-# Backup entities generated with doctrine:generate:entities command
-**/Entity/*~
-.env
-# Embedded web-server pid file
-/.web-server-pid
-
 
 ###> symfony/framework-bundle ###
 /.env.local
+/.env
 /.env.local.php
 /.env.*.local
 /config/secrets/prod/prod.decrypt.private.php
