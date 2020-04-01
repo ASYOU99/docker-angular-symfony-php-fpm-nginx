@@ -8,11 +8,11 @@
 
     <div class="info">
       <strong>{{ post.author }}</strong>
-      <small>{{ post.date | date:'medium':null:'ru' }}</small>
+      <small>{{ post.publishedAt | date:'medium':null:'ru' }}</small>
     </div>
 
     <div>
-      <quill-view-html [content]="post.text"></quill-view-html>
+      <quill-view-html [content]="post.content"></quill-view-html>
     </div>
   </div>
 </div>

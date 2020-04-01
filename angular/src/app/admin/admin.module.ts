@@ -36,7 +36,7 @@ import {AlertService} from './shared/services/alert.service';
           {path: 'login', component: LoginPageComponent},
           {path: 'dashboard', component: DashboardPageComponent, canActivate: [AuthGuard]},
           {path: 'create', component: CreatePageComponent, canActivate: [AuthGuard]},
-          {path: 'post/:id/edit', component: EditPageComponent, canActivate: [AuthGuard]},
+          {path: 'posts/:slug/edit', component: EditPageComponent, canActivate: [AuthGuard]},
         ],
       },
     ]),

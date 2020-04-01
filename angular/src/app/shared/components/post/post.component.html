@@ -2,15 +2,16 @@
   <div class="card-header">
     <h2>{{ post.title }}</h2>
 
-    <small>{{ post.date | date:'dd.MM.yyyy' }}</small>
+    <small>{{ post.publishedAt | date:'dd.MM.yyyy' }}</small>
   </div>
 
   <div>
     <small>{{ post.author }}</small>
+    <small>{{ post.summary }}</small>
   </div>
 
   <button
-    [routerLink]="['/post', post.id]"
+    [routerLink]="['/posts', post.slug]"
     class="btn btn-dark"
   >Открыть
   </button>
