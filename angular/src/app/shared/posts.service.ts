@@ -21,13 +21,32 @@ export class PostsService {
       }));
   }
 
-  postsPaginate(): Observable<PaginationCollection> {
-    return this.http.get<PaginationCollection>(`${environment.apiUrl}/blog`)
+  remove(id: string): Observable<void> {
+    return this.http.delete<void>(`${environment.apiUrl}/posts/${id}.json`);
+  }
+
+  update(post: Post): Observable<Post> {
+    return this.http.patch<Post>(`${environment.apiUrl}/posts/${post.id}.json`, post);
+  }
+
+  postsPaginate(page: number, limit: number = 10): Observable<PaginationCollection> {
+
+    return this.http.post<PaginationCollection>(`${environment.apiUrl}/blog/`, {page})
       .pipe(map((response: PaginationCollection) => {
-      return {
-        ...response
-      };
-    }));
+        return {
+          ...response
+        };
+      }));
+  }
+
+  getBySlug(slug: string): Observable<Post> {
+    return this.http.get<Post>(`${environment.apiUrl}/blog/posts/${slug}`)
+      .pipe(map((post: Post) => {
+        return {
+          ...post, slug,
+          date: new Date(post.publishedAt),
+        };
+      }));
   }
 
   getAll(): Observable<Post[]> {
@@ -43,21 +62,12 @@ export class PostsService {
       }));
   }
 
-  getBySlug(slug: string): Observable<Post> {
-    return this.http.get<Post>(`${environment.apiUrl}/blog/posts/${slug}`)
-      .pipe(map((post: Post) => {
+  findPosts(queryString: string, page: number, limit: number = 10): Observable<PaginationCollection> {
+    return this.http.post<PaginationCollection>(`${environment.apiUrl}/blog/`, {queryString})
+      .pipe(map((response: PaginationCollection) => {
         return {
-          ...post, slug,
-          date: new Date(post.publishedAt),
+          ...response
         };
       }));
-  }
-
-  remove(id: string): Observable<void> {
-    return this.http.delete<void>(`${environment.apiUrl}/posts/${id}.json`);
-  }
-
-  update(post: Post): Observable<Post> {
-    return this.http.patch<Post>(`${environment.apiUrl}/posts/${post.id}.json`, post);
   }
 }

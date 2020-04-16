@@ -34,3 +34,10 @@ export interface PaginationCollection {
   numResults: number;
   results: Post[];
 }
+
+export interface PaginateParams {
+  id: string;
+  itemsPerPage: number;
+  currentPage: number;
+  totalItems: number;
+}

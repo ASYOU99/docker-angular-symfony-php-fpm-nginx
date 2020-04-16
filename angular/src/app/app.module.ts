@@ -13,16 +13,17 @@ import {PostComponent} from './shared/components/post/post.component';
 import {SharedModule} from './shared/shared.module';
 import {AuthInterceptor} from './shared/auth.interceptor';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {FormsModule} from '@angular/forms';
 
 
 registerLocaleData(ruLocale, 'ru');
 
 
-const INTERCEPTOR_PROVIDER: Provider = {
-  provide: HTTP_INTERCEPTORS,
-  multi: true,
-  useClass: AuthInterceptor,
-};
+// const INTERCEPTOR_PROVIDER: Provider = {
+//   provide: HTTP_INTERCEPTORS,
+//   multi: true,
+//   useClass: AuthInterceptor,
+// };
 
 @NgModule({
   declarations: [
@@ -37,8 +38,9 @@ const INTERCEPTOR_PROVIDER: Provider = {
     AppRoutingModule,
     SharedModule,
     BrowserAnimationsModule,
+    FormsModule,
   ],
-  providers: [INTERCEPTOR_PROVIDER],
+  providers: [/*INTERCEPTOR_PROVIDER*/],
   bootstrap: [AppComponent],
 })
 export class AppModule {

@@ -15,20 +15,23 @@ class PostRepository extends ServiceEntityRepository
         parent::__construct($registry, Post::class);
     }
 
-    public function findLatest(int $page = 1): Paginator
+    public function findLatest(int $page = 1, int $pageSize = Post::NUM_ITEMS): Paginator
     {
         $qb = $this->createQueryBuilder('p')
             ->where('p.publishedAt <= :now')
             ->orderBy('p.publishedAt', 'DESC')
-            ->setParameter('now', new \DateTime())
-        ;
-        return (new Paginator($qb))->paginate($page);
+            ->setParameter('now', new \DateTime());
+
+        return (new Paginator($qb, $pageSize))->paginate($page);
     }
 
     /**
-     * @return Post[]
+     * @param string $query
+     * @param int $page
+     * @param int $limit
+     * @return Paginator
      */
-    public function findBySearchQuery(string $query, int $limit = Post::NUM_ITEMS): array
+    public function findBySearchQuery(string $query, int $page = 1, int $limit = Post::NUM_ITEMS): Paginator
     {
         $searchTerms = $this->extractSearchTerms($query);
 
@@ -41,19 +44,22 @@ class PostRepository extends ServiceEntityRepository
         foreach ($searchTerms as $key => $term) {
             $queryBuilder
                 ->orWhere('p.title LIKE :t_'.$key)
-                ->setParameter('t_'.$key, '%'.$term.'%')
-            ;
+                ->setParameter('t_'.$key, '%'.$term.'%');
         }
 
-        return $queryBuilder
+        $queryBuilder
             ->orderBy('p.publishedAt', 'DESC')
             ->setMaxResults($limit)
             ->getQuery()
             ->getResult();
+
+        return (new Paginator($queryBuilder, $limit))->paginate($page);
     }
 
     /**
      * Transforms the search string into an array of search terms.
+     * @param string $searchQuery
+     * @return array
      */
     private function extractSearchTerms(string $searchQuery): array
     {
