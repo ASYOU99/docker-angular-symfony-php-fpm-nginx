@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
 import {HttpClient} from '@angular/common/http';
 import {Observable} from 'rxjs';
-import {FbCreateResponse, PaginationCollection, Post} from './interfaces';
+import {FbCreateResponse, PaginationCollection, Post, RequestParams} from './interfaces';
 import {environment} from '../../environments/environment';
 import {map} from 'rxjs/operators';
 
@@ -29,9 +29,19 @@ export class PostsService {
     return this.http.patch<Post>(`${environment.apiUrl}/posts/${post.id}.json`, post);
   }
 
-  postsPaginate(page: number, limit: number = 10): Observable<PaginationCollection> {
+  posts(params: RequestParams): Observable<PaginationCollection> {
 
-    return this.http.post<PaginationCollection>(`${environment.apiUrl}/blog/`, {page})
+    return this.http.post<PaginationCollection>(`${environment.apiUrl}/blog/`, params)
+      .pipe(map((response: PaginationCollection) => {
+        return {
+          ...response
+        };
+      }));
+  }
+
+  postsSearch(params: RequestParams): Observable<PaginationCollection> {
+
+    return this.http.post<PaginationCollection>(`${environment.apiUrl}/blog/search`, params)
       .pipe(map((response: PaginationCollection) => {
         return {
           ...response
@@ -59,15 +69,6 @@ export class PostsService {
             id: key,
             date: new Date(response[key].date),
           }));
-      }));
-  }
-
-  findPosts(queryString: string, page: number, limit: number = 10): Observable<PaginationCollection> {
-    return this.http.post<PaginationCollection>(`${environment.apiUrl}/blog/`, {queryString})
-      .pipe(map((response: PaginationCollection) => {
-        return {
-          ...response
-        };
       }));
   }
 }

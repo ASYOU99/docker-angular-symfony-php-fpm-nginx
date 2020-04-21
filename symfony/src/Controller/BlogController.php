@@ -20,7 +20,6 @@ class BlogController extends AbstractController
      */
     public function index(Request $request,PostRepository $posts): Response
     {
-
         $limit = $request->get('limit', 10);
 
         $page = $request->get('page', 1);
@@ -43,7 +42,7 @@ class BlogController extends AbstractController
      */
     public function search(Request $request, PostRepository $posts): Response
     {
-        $query = $request->get('query', '');
+        $query = $request->get('searchValue', '');
 
         $limit = $request->get('limit', 10);
 

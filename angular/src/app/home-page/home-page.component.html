@@ -3,13 +3,22 @@
     <label>
       <input id='find' type="text" placeholder="Find post..." [(ngModel)]="searchStr">
     </label>
-    <button (click)="find()" class="btn btn-dark">Find</button>
+    <button (click)="find(); page = 1" class="btn btn-dark">Find</button>
+    <button (click)="clearSearchQuery()" class="btn btn-dark">Clear</button>
+  </div>
+  <div>
+    <select name="limit" id="limit" [(ngModel)]="limit" (change)="newLimit()">
+      <option value="10">10</option>
+      <option value="25">25</option>
+      <option value="50">50</option>
+      <option value="100">100</option>
+    </select>
   </div>
     <app-post
       *ngFor="let post of posts | paginate: paginateParams"
       [post]="post"
     ></app-post>
-  <pagination-controls (pageChange)="getPage($event)" id="{{paginateParams.id}}"></pagination-controls>
+  <pagination-controls (pageChange)="changePage($event)" id="{{paginateParams.id}}"></pagination-controls>
 </div>
 
 <ng-template #loading>

@@ -41,3 +41,9 @@ export interface PaginateParams {
   currentPage: number;
   totalItems: number;
 }
+
+export interface RequestParams {
+  page?: number;
+  queryString?: string;
+  limit?: number;
+}

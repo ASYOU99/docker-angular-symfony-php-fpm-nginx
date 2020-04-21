@@ -1,56 +1,43 @@
-import {Component, OnInit, OnDestroy} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PostsService} from '../shared/posts.service';
-import {Observable, Subscription} from 'rxjs';
-import {PaginateParams, PaginationCollection, Post} from '../shared/interfaces';
-import {map} from 'rxjs/operators';
+import {Subscription} from 'rxjs';
+
+import {PaginateParams, Post, RequestParams} from '../shared/interfaces';
+import {AbstractComponentController} from '../shared/components/abstract-component/abstract-controller';
+import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-home-page',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss'],
 })
-export class HomePageComponent implements OnInit, OnDestroy {
 
-  page = 1;
-
-  total = 0;
+export class HomePageComponent extends AbstractComponentController implements OnInit, OnDestroy {
 
   posts: Post[];
-
-  paginateParams: PaginateParams;
 
   pSub: Subscription;
 
   fSub: Subscription;
 
-  searchStr: string;
-
   constructor(private postsService: PostsService) {
+    super();
   }
 
   ngOnInit() {
 
-    this.paginateParams = {
-      id: 'server',
-      itemsPerPage: 10,
-      currentPage: this.page,
-      totalItems: this.total,
-    };
+    super.ngOnInit();
 
-    this.getPage(this.page);
+    this.params = {};
+
+    this.changePage();
   }
 
-  getPage(setPage: number) {
+  changePage(setPage: number = 1) {
 
-    this.pSub = this.postsService.postsPaginate(setPage).subscribe(pagination => {
-      console.log(pagination);
+    this.page = setPage;
 
-      this.posts = pagination.results;
-
-      this.paginateParams.currentPage = setPage;
-
-      this.paginateParams.totalItems = pagination.numResults;
-    });
+    this.pSub = this.load();
   }
 
   ngOnDestroy() {
@@ -64,15 +51,36 @@ export class HomePageComponent implements OnInit, OnDestroy {
     }
   }
 
-  find(setPage: number) {
+  load(methodName = 'posts') {
 
-    this.fSub = this.postsService.findPosts(this.searchStr, setPage).subscribe(pagination => {
+    return this.getPosts(methodName);
+  }
+
+  find() {
+
+    this.fSub = this.load('postsSearch');
+  }
+
+  getPosts(methodName) {
+
+    return this.postsService[methodName](this.loadParams).subscribe(pagination => {
 
       this.posts = pagination.results;
 
-      this.paginateParams.currentPage = setPage;
+      this.paginateParams.currentPage = this.page;
+
+      this.paginateParams.itemsPerPage = this.limit;
 
       this.paginateParams.totalItems = pagination.numResults;
+
     });
+  }
+
+  newLimit() {
+
+    this.page = 1;
+
+    this.searchStr.length > 0 ? this.find() : this.load();
+
   }
 }
