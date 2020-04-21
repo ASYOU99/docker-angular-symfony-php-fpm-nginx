@@ -1,6 +1,5 @@
 import {OnInit} from '@angular/core';
 import {PaginateParams, RequestParams} from '../../interfaces';
-import {PostsService} from '../../posts.service';
 
 export class AbstractComponentController implements OnInit {
 
@@ -23,6 +22,7 @@ export class AbstractComponentController implements OnInit {
       itemsPerPage: this.limit,
       currentPage: this.page,
       totalItems: this.total,
+      optionsPerPage: [10, 25, 50, 100],
     };
   }
 
@@ -45,6 +45,16 @@ export class AbstractComponentController implements OnInit {
     this.searchStr = '';
 
     this.load();
+  }
+
+
+  reset() {
+
+    this.page = 1;
+
+    this.limit = this.paginateParams.optionsPerPage[0];
+
+    this.clearSearchQuery();
   }
 
   load() {

@@ -40,6 +40,7 @@ export interface PaginateParams {
   itemsPerPage: number;
   currentPage: number;
   totalItems: number;
+  optionsPerPage: number[];
 }
 
 export interface RequestParams {
