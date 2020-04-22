@@ -24,6 +24,7 @@
     "@angular/router": "~9.1.0",
     "angular": "^1.7.9",
     "angular-sanitize": "^1.7.9",
+    "jwt-decode": "^2.2.0",
     "material": "^0.4.3",
     "ng-quill": "^4.5.3",
     "ngx-pagination": "^5.0.0",

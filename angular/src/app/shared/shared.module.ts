@@ -7,12 +7,12 @@ import {NgxPaginationModule} from 'ngx-pagination';
   imports: [
     HttpClientModule,
     QuillModule.forRoot(),
-    NgxPaginationModule
+    NgxPaginationModule,
   ],
   exports: [
     HttpClientModule,
     QuillModule,
-    NgxPaginationModule
+    NgxPaginationModule,
   ],
 })
 export class SharedModule {

@@ -64,8 +64,7 @@ class PostType extends AbstractType
                 if (null !== $postTitle = $post->getTitle()) {
                     $post->setSlug($this->slugger->slug($postTitle)->lower());
                 }
-            })
-        ;
+            });
     }
 
     /**

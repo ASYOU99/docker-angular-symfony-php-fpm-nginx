@@ -12,10 +12,10 @@
       <option *ngFor="let perPage of paginateParams.optionsPerPage">{{perPage}}</option>
     </select>
   </div>
-    <app-post
-      *ngFor="let post of posts | paginate: paginateParams"
-      [post]="post"
-    ></app-post>
+  <app-post
+    *ngFor="let post of posts | paginate: paginateParams"
+    [post]="post"
+  ></app-post>
   <pagination-controls (pageChange)="changePage($event)" id="{{paginateParams.id}}"></pagination-controls>
 </div>
 

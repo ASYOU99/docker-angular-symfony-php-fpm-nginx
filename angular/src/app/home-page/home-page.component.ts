@@ -2,9 +2,8 @@ import {Component, OnDestroy, OnInit} from '@angular/core';
 import {PostsService} from '../shared/posts.service';
 import {Subscription} from 'rxjs';
 
-import {PaginateParams, Post, RequestParams} from '../shared/interfaces';
+import {Post} from '../shared/interfaces';
 import {AbstractComponentController} from '../shared/components/abstract-component/abstract-controller';
-import {environment} from '../../environments/environment';
 
 @Component({
   selector: 'app-home-page',

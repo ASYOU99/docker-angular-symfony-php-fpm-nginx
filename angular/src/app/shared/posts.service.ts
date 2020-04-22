@@ -34,7 +34,7 @@ export class PostsService {
     return this.http.post<PaginationCollection>(`${environment.apiUrl}/blog/`, params)
       .pipe(map((response: PaginationCollection) => {
         return {
-          ...response
+          ...response,
         };
       }));
   }
@@ -44,7 +44,7 @@ export class PostsService {
     return this.http.post<PaginationCollection>(`${environment.apiUrl}/blog/search`, params)
       .pipe(map((response: PaginationCollection) => {
         return {
-          ...response
+          ...response,
         };
       }));
   }
@@ -60,7 +60,7 @@ export class PostsService {
   }
 
   getAll(): Observable<Post[]> {
-    return this.http.get(`${environment.apiUrl}/posts.json`)
+    return this.http.get(`${environment.apiUrl}/blog/all`)
       .pipe(map((response: { [key: string]: any }) => {
         return Object
           .keys(response)

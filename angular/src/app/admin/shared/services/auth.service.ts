@@ -1,9 +1,10 @@
 import {Injectable} from '@angular/core';
 import {HttpClient, HttpErrorResponse} from '@angular/common/http';
-import {FbAuthResponse, User} from '../../../shared/interfaces';
+import {AuthResponse, User} from '../../../shared/interfaces';
 import {Observable, Subject, throwError} from 'rxjs';
 import {environment} from '../../../../environments/environment';
 import {catchError, tap} from 'rxjs/operators';
+import * as jwt_decode from 'jwt-decode';
 
 @Injectable({providedIn: 'root'})
 export class AuthService {
@@ -14,17 +15,17 @@ export class AuthService {
   }
 
   get token(): string {
-    const expDate = new Date(localStorage.getItem('fb-token-exp'));
+    const expDate = new Date(localStorage.getItem('token-exp'));
     if (new Date() > expDate) {
       this.logout();
       return null;
     }
-    return localStorage.getItem('fb-token');
+    return localStorage.getItem('token');
   }
 
   login(user: User): Observable<any> {
-    user.returnSecureToken = true;
-    return this.http.post(`http://sf4.loc/login`, user)
+
+    return this.http.post(`${environment.apiAdminUrl}/login_check`, user)
       .pipe(
         tap(this.setToken),
         catchError(this.handleError.bind(this)),
@@ -40,29 +41,39 @@ export class AuthService {
   }
 
   private handleError(error: HttpErrorResponse) {
-    const {message} = error.error.error;
 
-    switch (message) {
-      case 'INVALID_EMAIL':
-        this.error$.next('Неверный email');
-        break;
-      case 'INVALID_PASSWORD':
-        this.error$.next('Неверный пароль');
-        break;
-      case 'EMAIL_NOT_FOUND':
-        this.error$.next('Такого email нет');
-        break;
-    }
+    const message = error.error.message;
 
+    this.error$.next(message);
+    // switch (message) {
+    //   case 'INVALID_EMAIL':
+    //     this.error$.next('Неверный email');
+    //     break;
+    //   case 'INVALID_PASSWORD':
+    //     this.error$.next('Неверный пароль');
+    //     break;
+    //   case 'EMAIL_NOT_FOUND':
+    //     this.error$.next('Такого email нет');
+    //     break;
+    // }
+    //
     return throwError(error);
   }
 
-  private setToken(response: FbAuthResponse | null) {
+  private setToken(response: AuthResponse | null) {
+
     if (response) {
-      const expDate = new Date(new Date().getTime() + +response.expiresIn * 1000);
-      localStorage.setItem('fb-token', response.idToken);
-      localStorage.setItem('fb-token-exp', expDate.toString());
+
+      const decoded = jwt_decode(response.token);
+
+      const expDate = new Date(+decoded.exp * 1000);
+
+      localStorage.setItem('token', response.token);
+
+      localStorage.setItem('token-exp', expDate.toString());
+
     } else {
+
       localStorage.clear();
     }
   }

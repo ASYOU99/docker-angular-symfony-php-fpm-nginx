@@ -4,8 +4,10 @@ namespace App\Repository;
 
 use App\Entity\Post;
 use App\Pagination\Paginator;
+use DateTime;
 use Doctrine\Bundle\DoctrineBundle\Repository\ServiceEntityRepository;
 use Doctrine\Common\Persistence\ManagerRegistry;
+use function count;
 use function Symfony\Component\String\u;
 
 class PostRepository extends ServiceEntityRepository
@@ -20,7 +22,7 @@ class PostRepository extends ServiceEntityRepository
         $qb = $this->createQueryBuilder('p')
             ->where('p.publishedAt <= :now')
             ->orderBy('p.publishedAt', 'DESC')
-            ->setParameter('now', new \DateTime());
+            ->setParameter('now', new DateTime());
 
         return (new Paginator($qb, $pageSize))->paginate($page);
     }
@@ -35,7 +37,7 @@ class PostRepository extends ServiceEntityRepository
     {
         $searchTerms = $this->extractSearchTerms($query);
 
-        if (0 === \count($searchTerms)) {
+        if (0 === count($searchTerms)) {
             return [];
         }
 
@@ -43,8 +45,8 @@ class PostRepository extends ServiceEntityRepository
 
         foreach ($searchTerms as $key => $term) {
             $queryBuilder
-                ->orWhere('p.title LIKE :t_'.$key)
-                ->setParameter('t_'.$key, '%'.$term.'%');
+                ->orWhere('p.title LIKE :t_' . $key)
+                ->setParameter('t_' . $key, '%' . $term . '%');
         }
 
         $queryBuilder

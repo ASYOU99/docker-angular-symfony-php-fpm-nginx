@@ -4,7 +4,6 @@ namespace App\Controller;
 
 use App\Entity\Post;
 use App\Repository\PostRepository;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\Cache;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -18,7 +17,7 @@ class BlogController extends AbstractController
     /**
      * @Route("/", methods="POST", name="blog_index")
      */
-    public function index(Request $request,PostRepository $posts): Response
+    public function index(Request $request, PostRepository $posts): Response
     {
         $limit = $request->get('limit', 10);
 

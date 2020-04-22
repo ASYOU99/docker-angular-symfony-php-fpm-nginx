@@ -82,7 +82,7 @@ class AppFixtures extends Fixture
                 $this->slugger->slug($title)->lower(),
                 $this->getRandomText(),
                 $this->getPostContent(),
-                new DateTime('now - '.$i.'days'),
+                new DateTime('now - ' . $i . 'days'),
             ];
         }
 
