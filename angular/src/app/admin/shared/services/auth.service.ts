@@ -25,7 +25,7 @@ export class AuthService {
 
   login(user: User): Observable<any> {
 
-    return this.http.post(`${environment.apiAdminUrl}/login_check`, user)
+    return this.http.post(`${environment.apiLoginUrl}/login_check`, user)
       .pipe(
         tap(this.setToken),
         catchError(this.handleError.bind(this)),
@@ -68,7 +68,7 @@ export class AuthService {
 
       const expDate = new Date(+decoded.exp * 1000);
 
-      localStorage.setItem('token', response.token);
+      localStorage.setItem('token', 'Bearer ' + response.token);
 
       localStorage.setItem('token-exp', expDate.toString());
 

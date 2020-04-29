@@ -11,7 +11,7 @@ export class PostsService {
   }
 
   create(post: Post): Observable<Post> {
-    return this.http.post(`${environment.apiUrl}/posts.json`, post)
+    return this.http.post(`${environment.apiAdminUrl}/posts`, post)
       .pipe(map((response: FbCreateResponse) => {
         return {
           ...post,
@@ -22,11 +22,12 @@ export class PostsService {
   }
 
   remove(id: string): Observable<void> {
-    return this.http.delete<void>(`${environment.apiUrl}/posts/${id}.json`);
+
+    return this.http.delete<void>(`${environment.apiAdminUrl}/post/${id}`);
   }
 
   update(post: Post): Observable<Post> {
-    return this.http.patch<Post>(`${environment.apiUrl}/posts/${post.id}.json`, post);
+    return this.http.patch<Post>(`${environment.apiAdminUrl}/post/${post.id}`, post);
   }
 
   posts(params: RequestParams): Observable<PaginationCollection> {
@@ -60,8 +61,10 @@ export class PostsService {
   }
 
   getAll(): Observable<Post[]> {
-    return this.http.get(`${environment.apiUrl}/blog/all`)
+
+    return this.http.get(`${environment.apiAdminUrl}/post`)
       .pipe(map((response: { [key: string]: any }) => {
+        console.log(response);
         return Object
           .keys(response)
           .map(key => ({

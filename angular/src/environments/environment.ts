@@ -7,7 +7,8 @@ import {Environment} from './interface';
 export const environment: Environment = {
   production: false,
   apiUrl: 'http://sf4.loc',
-  apiAdminUrl: 'http://sf4.loc/api',
+  apiAdminUrl: 'http://sf4.loc/admin',
+  apiLoginUrl: 'http://sf4.loc/api',
 };
 
 /*

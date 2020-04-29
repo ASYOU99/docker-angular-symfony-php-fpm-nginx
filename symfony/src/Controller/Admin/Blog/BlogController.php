@@ -127,26 +127,19 @@ class BlogController extends AbstractController
     /**
      * Deletes a Post entity.
      *
-     * @Route("/{id}/delete", methods="POST", name="admin_post_delete")
-     * @IsGranted("delete", subject="post")
+     * @Route("/{id}", methods="DELETE", name="admin_post_delete")
      */
     public function delete(Request $request, Post $post): Response
     {
-        if (!$this->isCsrfTokenValid('delete', $request->request->get('token'))) {
-            return $this->redirectToRoute('admin_post_index');
-        }
-
         // Delete the tags associated with this blog post. This is done automatically
         // by Doctrine, except for SQLite (the database used in this application)
         // because foreign key support is not enabled by default in SQLite
-        $post->getTags()->clear();
+        //$post->getTags()->clear();
 
         $em = $this->getDoctrine()->getManager();
         $em->remove($post);
         $em->flush();
 
-        $this->addFlash('success', 'post.deleted_successfully');
-
-        return $this->redirectToRoute('admin_post_index');
+        return $this->json([]);
     }
 }
